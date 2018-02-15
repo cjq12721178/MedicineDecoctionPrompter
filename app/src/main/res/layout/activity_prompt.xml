@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/padding_large"
+    tools:context="tool.cjq.com.medicinedecoctionprompter.PromptActivity">
+
+    <ImageView
+        android:layout_width="@dimen/size_image_side_huge"
+        android:layout_height="@dimen/size_image_side_huge"
+        android:id="@+id/iv_photo_sticker"
+        android:src="@drawable/ic_photo_sticker"
+        android:scaleType="fitCenter"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_decoction_prompt"
+        android:layout_below="@id/iv_photo_sticker"
+        android:layout_marginTop="@dimen/padding_large"
+        android:textSize="@dimen/size_text_title_middle"
+        android:gravity="center_horizontal"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_decoction_description"
+        android:layout_below="@id/tv_decoction_prompt"
+        android:layout_marginTop="@dimen/padding_mid"
+        android:textSize="@dimen/size_text_title_small"
+        android:gravity="center_horizontal"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_close_prompter"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/padding_mid"
+        android:text="@string/close_decoction_prompt"
+        android:textSize="@dimen/size_text_dialog"
+        android:gravity="center_horizontal"/>
+</RelativeLayout>

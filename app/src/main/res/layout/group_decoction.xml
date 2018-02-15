@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/padding_mid">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="11"
+        android:id="@+id/tv_decoction_name"
+        android:textSize="@dimen/size_text_title_big"
+        android:gravity="center"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9"
+        android:id="@+id/tv_start_time"
+        android:textSize="@dimen/size_text_activity"
+        android:gravity="center_vertical|left"
+        android:drawableRight="@drawable/ic_start_decoction" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9"
+        android:id="@+id/tv_first_stir"
+        android:textSize="@dimen/size_text_activity"
+        android:gravity="center_vertical|left" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9"
+        android:id="@+id/tv_second_stir"
+        android:textSize="@dimen/size_text_activity"
+        android:gravity="center_vertical|left" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9"
+        android:id="@+id/tv_decoction_state"
+        android:textSize="@dimen/size_text_activity"
+        android:gravity="center_vertical|left"/>
+</LinearLayout>

@@ -1,0 +1,15 @@
+<resources>
+    <!-- padding -->
+    <dimen name="padding_mid">16dp</dimen>
+    <dimen name="padding_large">25dp</dimen>
+
+    <!-- 字体大小 -->
+    <dimen name="size_text_title_big">22sp</dimen>
+    <dimen name="size_text_title_middle">20sp</dimen>
+    <dimen name="size_text_title_small">18sp</dimen>
+    <dimen name="size_text_activity">14sp</dimen>
+    <dimen name="size_text_dialog">12sp</dimen>
+    
+    <!-- 图片大小 -->
+    <dimen name="size_image_side_huge">192dp</dimen>
+</resources>

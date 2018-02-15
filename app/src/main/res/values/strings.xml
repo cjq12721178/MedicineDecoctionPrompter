@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">煎药达人</string>
+    <string name="task_first_decoction">第一开中药</string>
+    <string name="task_second_decoction">第二开中药</string>
+    <string name="event_first_stir">第一次拌药</string>
+    <string name="event_second_stir">第二次拌药</string>
+    <string name="event_decoction_finish">煎药结束</string>
+    <string name="count_down_description" formatted="false">距离%s还有：%02d分%02d秒</string>
+    <string name="event_finish" formatted="false">%s已完成</string>
+    <string name="decoction_not_start">煎药尚未开始</string>
+    <string name="decoction_start_time">开始煎药时间：HH:mm:ss</string>
+    <string name="event_not_start" formatted="false">%s尚未开始</string>
+    <string name="on_time_stir">快点去拌药</string>
+    <string name="on_time_decoction_finish">药煎好啦</string>
+    <string name="on_time_description" formatted="false">这是%s哦</string>
+    <string name="close_decoction_prompt">＞＞＞＞＞　滑动说再见　＞＞＞＞＞</string>
+
+    <integer name="first_medicine_duration_waiting_for_first_stir">10</integer>
+    <integer name="first_medicine_duration_waiting_for_second_stir">10</integer>
+    <integer name="first_medicine_duration_waiting_for_finish">10</integer>
+    <integer name="second_medicine_duration_waiting_for_first_stir">10</integer>
+    <integer name="second_medicine_duration_waiting_for_second_stir">9</integer>
+    <integer name="second_medicine_duration_waiting_for_finish">9</integer>
+</resources>
