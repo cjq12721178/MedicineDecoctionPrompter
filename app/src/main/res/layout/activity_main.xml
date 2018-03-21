@@ -6,12 +6,12 @@
     android:orientation="vertical"
     tools:context="tool.cjq.com.medicinedecoctionprompter.MainActivity">
 
-    <include layout="@layout/group_decoction"
+    <include layout="@layout/group_one_stir_decoction"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:id="@+id/il_decoction_first" />
-    <include layout="@layout/group_decoction"
+    <include layout="@layout/group_one_stir_decoction"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"

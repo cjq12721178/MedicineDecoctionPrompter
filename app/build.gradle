@@ -7,15 +7,15 @@ def buildTime() {
 }
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
         applicationId "tool.cjq.com.medicinedecoctionprompter"
         minSdkVersion 19
-        targetSdkVersion 24
-        versionCode 7
-        versionName "0.1.6"
+        targetSdkVersion 26
+        versionCode 8
+        versionName "0.2.0"
     }
     buildTypes {
         release {
@@ -25,16 +25,15 @@ android {
     }
     //打包后应用名称
     applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            def outputFile = output.outputFile
+        variant.outputs.all { output ->
             def fileName
-            if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                if (variant.buildType.name.equals('release')) {
-                    fileName = "com.cjq.tool.medicine_decoction_prompter_${defaultConfig.versionName}_${buildTime()}.apk"
-                } else if (variant.buildType.name.equals('debug')) {
-                    fileName = "debug_${defaultConfig.versionName}}.apk"
+            if (outputFileName != null && outputFileName.endsWith('.aar')) {
+                if (variant.buildType.name == 'release') {
+                    fileName = "${applicationId}-${defaultConfig.versionName}.aar"
+                } else if (variant.buildType.name == 'debug') {
+                    fileName = "debug-${defaultConfig.versionName}.aar"
                 }
-                output.outputFile = new File(outputFile.parent, fileName)
+                outputFileName = fileName
             }
         }
     }
@@ -43,5 +42,5 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.android.support:appcompat-v7:26.0.2'
 }

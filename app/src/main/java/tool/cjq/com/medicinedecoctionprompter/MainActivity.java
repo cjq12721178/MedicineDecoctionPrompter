@@ -1,12 +1,10 @@
 package tool.cjq.com.medicinedecoctionprompter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.IntegerRes;
-import android.support.annotation.RawRes;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -46,34 +44,52 @@ public class MainActivity extends AppCompatActivity {
         descriptor = new Descriptor(this);
         firstGroup = getDecoctionGroup(R.id.il_decoction_first,
                 importDecoctionTask(R.string.task_first_decoction,
-                        R.integer.first_medicine_duration_waiting_for_first_stir,
-                        R.integer.first_medicine_duration_waiting_for_second_stir,
+                        R.integer.first_medicine_duration_waiting_for_stir,
                         R.integer.first_medicine_duration_waiting_for_finish));
         secondGroup = getDecoctionGroup(R.id.il_decoction_second,
                 importDecoctionTask(R.string.task_second_decoction,
-                        R.integer.second_medicine_duration_waiting_for_first_stir,
-                        R.integer.second_medicine_duration_waiting_for_second_stir,
+                        R.integer.second_medicine_duration_waiting_for_stir,
                         R.integer.second_medicine_duration_waiting_for_finish));
         setDecoctionView(firstGroup);
         setDecoctionView(secondGroup);
     }
 
-    private ContinuousTask importDecoctionTask(@StringRes int nameId,
-                                               @IntegerRes int duration1,
-                                               @IntegerRes int duration2,
-                                               @IntegerRes int duration3) {
-        ContinuousTask decoctionTask = ContinuousTask.build(this, getString(nameId));
+//    private ContinuousTask importDecoctionTask(@StringRes int nameId,
+//                                               @IntegerRes int duration1,
+//                                               @IntegerRes int duration2,
+//                                               @IntegerRes int duration3) {
+//        ContinuousTask decoctionTask = ContinuousTask.build(this, getString(nameId));
+//        if (decoctionTask.getEventSize() == 0) {
+//            Resources resources = getResources();
+//            decoctionTask.addEvent(new WaitForFirstStirEvent(getString(R.string.event_first_stir),
+//                    TimeUnit.MINUTES.toMillis(resources.getInteger(duration1))));
+//            decoctionTask.addEvent(new WaitForSecondStirEvent(getString(R.string.event_second_stir),
+//                    TimeUnit.MINUTES.toMillis(resources.getInteger(duration2))));
+//            decoctionTask.addEvent(nameId == R.string.task_first_decoction ?
+//                    new WaitForFirstDecoctionFinishEvent(getString(R.string.event_decoction_finish),
+//                            TimeUnit.MINUTES.toMillis(resources.getInteger(duration3))) :
+//                    new WaitForSecondDecoctionFinishEvent(getString(R.string.event_decoction_finish),
+//                            TimeUnit.MINUTES.toMillis(resources.getInteger(duration3))));
+//        }
+//        return decoctionTask;
+//    }
+
+    private ContinuousTask importDecoctionTask(@StringRes int nameRes,
+                                               @IntegerRes int strDurationRes,
+                                               @IntegerRes int finishDurationRes) {
+        ContinuousTask decoctionTask = ContinuousTask.build(this, getString(nameRes));
         if (decoctionTask.getEventSize() == 0) {
             Resources resources = getResources();
-            decoctionTask.addEvent(new WaitForFirstStirEvent(getString(R.string.event_first_stir),
-                    TimeUnit.MINUTES.toMillis(resources.getInteger(duration1))));
-            decoctionTask.addEvent(new WaitForSecondStirEvent(getString(R.string.event_second_stir),
-                    TimeUnit.MINUTES.toMillis(resources.getInteger(duration2))));
-            decoctionTask.addEvent(nameId == R.string.task_first_decoction ?
-                    new WaitForFirstDecoctionFinishEvent(getString(R.string.event_decoction_finish),
-                            TimeUnit.MINUTES.toMillis(resources.getInteger(duration3))) :
-                    new WaitForSecondDecoctionFinishEvent(getString(R.string.event_decoction_finish),
-                            TimeUnit.MINUTES.toMillis(resources.getInteger(duration3))));
+            decoctionTask.addEvent(new PromptEvent(getString(R.string.event_stir),
+                    TimeUnit.MINUTES.toMillis(resources.getInteger(strDurationRes)),
+                    R.string.on_time_stir,
+                    R.raw.music_fisrt_stir,
+                    R.string.event_stir));
+            decoctionTask.addEvent(new PromptEvent(getString(R.string.event_decoction_finish),
+                    TimeUnit.MINUTES.toMillis(resources.getInteger(finishDurationRes)),
+                    R.string.on_time_decoction_finish,
+                    R.raw.music_decoction,
+                    nameRes).setNeedRelease(nameRes == R.string.task_first_decoction));
         }
         return decoctionTask;
     }
@@ -81,11 +97,10 @@ public class MainActivity extends AppCompatActivity {
     private DecoctionGroup getDecoctionGroup(@IdRes int groupId, ContinuousTask decoctionTask) {
         DecoctionGroup group = new DecoctionGroup();
         View parent = findViewById(groupId);
-        group.tvName = (TextView) parent.findViewById(R.id.tv_decoction_name);
-        group.tvStartTime = (TextView)parent.findViewById(R.id.tv_start_time);
-        group.tvFirstStir = (TextView)parent.findViewById(R.id.tv_first_stir);
-        group.tvSecondStir = (TextView)parent.findViewById(R.id.tv_second_stir);
-        group.tvState = (TextView)parent.findViewById(R.id.tv_decoction_state);
+        group.tvName = parent.findViewById(R.id.tv_decoction_name);
+        group.tvStartTime = parent.findViewById(R.id.tv_start_time);
+        group.tvStir = parent.findViewById(R.id.tv_stir);
+        group.tvState = parent.findViewById(R.id.tv_decoction_state);
         group.decoctionTask = decoctionTask;
         return group;
     }
@@ -94,14 +109,14 @@ public class MainActivity extends AppCompatActivity {
         group.tvName.setText(group.decoctionTask.getName());
         group.tvStartTime.setOnClickListener(group);
         group.setStartTime();
-        setEventViewState(group.tvFirstStir, group.decoctionTask, 0);
-        setEventViewState(group.tvSecondStir, group.decoctionTask, 1);
-        setEventViewState(group.tvState, group.decoctionTask, 2);
+        setEventViewState(group.tvStir, group.decoctionTask, 0);
+        //setEventViewState(group.tvSecondStir, group.decoctionTask, 1);
+        setEventViewState(group.tvState, group.decoctionTask, 1);
         group.decoctionTask.startCountDown(timer, group, handler);
     }
 
     private void setEventViewState(TextView tv, ContinuousTask task, int eventNumber) {
-        String description = eventNumber == 2 ?
+        String description = eventNumber == 1 ?
                 descriptor.getTaskStateDescription(task) :
                 descriptor.getEventStateDescription(task.getEvent(eventNumber));
         if (description != null) {
@@ -115,8 +130,8 @@ public class MainActivity extends AppCompatActivity {
 
         TextView tvName;
         TextView tvStartTime;
-        TextView tvFirstStir;
-        TextView tvSecondStir;
+        TextView tvStir;
+        //TextView tvSecondStir;
         TextView tvState;
         ContinuousTask decoctionTask;
 
@@ -126,12 +141,12 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.tv_start_time: {
                     decoctionTask.start(0);
                 } break;
-                case R.id.tv_first_stir: {
+                case R.id.tv_stir: {
                     decoctionTask.start(1);
                 } break;
-                case R.id.tv_second_stir: {
-                    decoctionTask.start(2);
-                } break;
+//                case R.id.tv_second_stir: {
+//                    decoctionTask.start(2);
+//                } break;
             }
             decoctionTask.startCountDown(timer, this, handler);
             setStartTime();
@@ -145,16 +160,16 @@ public class MainActivity extends AppCompatActivity {
         public void onCountDown(ContinuousTask task, int eventNumber, long minutes, long seconds) {
             if (minutes == 0 && seconds == 0) {
                 switch (eventNumber) {
-                    case 0:tvFirstStir.setText(descriptor.getEventFinishDescription(task.getEvent(eventNumber).getName()));break;
-                    case 1:tvSecondStir.setText(descriptor.getEventFinishDescription(task.getEvent(eventNumber).getName()));break;
-                    case 2:tvState.setText(descriptor.getEventFinishDescription(task.getName()));break;
+                    case 0:tvStir.setText(descriptor.getEventFinishDescription(task.getEvent(eventNumber).getName()));break;
+                    //case 1:tvSecondStir.setText(descriptor.getEventFinishDescription(task.getEvent(eventNumber).getName()));break;
+                    case 1:tvState.setText(descriptor.getEventFinishDescription(task.getName()));break;
                 }
             } else {
                 String description = descriptor.getCountDownDescription(task.getEvent(eventNumber).getName(), minutes, seconds);
                 switch (eventNumber) {
-                    case 0:tvFirstStir.setText(description);break;
-                    case 1:tvSecondStir.setText(description);break;
-                    case 2:tvState.setText(description);break;
+                    case 0:tvStir.setText(description);break;
+                    //case 1:tvSecondStir.setText(description);break;
+                    case 1:tvState.setText(description);break;
                 }
             }
         }
@@ -214,130 +229,130 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private static abstract class BaseEvent extends ContinuousTask.Event {
-
-        public BaseEvent(String name, long duration) {
-            super(name, duration);
-        }
-
-        @Override
-        protected void onPrepare(Context context, Intent intent) {
-        }
-
-        @StringRes
-        protected abstract int getMessage();
-
-        @RawRes
-        protected abstract int getMusic();
-
-        @StringRes
-        protected abstract int getDescriptionName();
-
-        @Override
-        protected boolean onExecute(Context context, Intent intent) {
-            context.startActivity(new Intent(context, PromptActivity.class)
-                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    .putExtra(PromptActivity.KEY_DECOCTION_PROMPT, context.getString(getMessage()))
-                    .putExtra(PromptActivity.KEY_DECOCTION_DESCRIPTION,
-                            String.format(context.getString(R.string.on_time_description),
-                                    context.getString(getDescriptionName())))
-                    .putExtra(PromptActivity.KEY_MUSIC_RAW_ID, getMusic()));
-            return false;
-        }
-    }
-
-    public static class WaitForFirstStirEvent extends BaseEvent {
-
-        public WaitForFirstStirEvent(String name, long duration) {
-            super(name, duration);
-        }
-
-        @Override
-        protected int getMessage() {
-            return R.string.on_time_stir;
-        }
-
-        @Override
-        protected int getMusic() {
-            return R.raw.music_fisrt_stir;
-        }
-
-        @Override
-        protected int getDescriptionName() {
-            return R.string.event_first_stir;
-        }
-    }
-
-    public static class WaitForSecondStirEvent extends BaseEvent {
-
-        public WaitForSecondStirEvent(String name, long duration) {
-            super(name, duration);
-        }
-
-        @Override
-        protected int getMessage() {
-            return R.string.on_time_stir;
-        }
-
-        @Override
-        protected int getMusic() {
-            return R.raw.music_second_stir;
-        }
-
-        @Override
-        protected int getDescriptionName() {
-            return R.string.event_second_stir;
-        }
-    }
-
-    public static class WaitForFirstDecoctionFinishEvent extends BaseEvent {
-
-        public WaitForFirstDecoctionFinishEvent(String name, long duration) {
-            super(name, duration);
-        }
-
-        @Override
-        protected int getMessage() {
-            return R.string.on_time_decoction_finish;
-        }
-
-        @Override
-        protected int getMusic() {
-            return R.raw.music_decoction;
-        }
-
-        @Override
-        protected int getDescriptionName() {
-            return R.string.task_first_decoction;
-        }
-    }
-
-    public static class WaitForSecondDecoctionFinishEvent extends BaseEvent {
-
-        public WaitForSecondDecoctionFinishEvent(String name, long duration) {
-            super(name, duration);
-        }
-
-        @Override
-        protected int getMessage() {
-            return R.string.on_time_decoction_finish;
-        }
-
-        @Override
-        protected int getMusic() {
-            return R.raw.music_decoction;
-        }
-
-        @Override
-        protected int getDescriptionName() {
-            return R.string.task_second_decoction;
-        }
-
-        @Override
-        protected boolean onExecute(Context context, Intent intent) {
-            super.onExecute(context, intent);
-            ContinuousTask.release(context, context.getString(R.string.task_first_decoction));
-            return true;
-        }
-    }
+//    private static abstract class BaseEvent extends ContinuousTask.Event {
+//
+//        public BaseEvent(String name, long duration) {
+//            super(name, duration);
+//        }
+//
+//        @Override
+//        protected void onPrepare(Context context, Intent intent) {
+//        }
+//
+//        @StringRes
+//        protected abstract int getMessage();
+//
+//        @RawRes
+//        protected abstract int getMusic();
+//
+//        @StringRes
+//        protected abstract int getDescriptionName();
+//
+//        @Override
+//        protected boolean onExecute(Context context, Intent intent) {
+//            context.startActivity(new Intent(context, PromptActivity.class)
+//                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//                    .putExtra(PromptActivity.KEY_DECOCTION_PROMPT, context.getString(getMessage()))
+//                    .putExtra(PromptActivity.KEY_DECOCTION_DESCRIPTION,
+//                            String.format(context.getString(R.string.on_time_description),
+//                                    context.getString(getDescriptionName())))
+//                    .putExtra(PromptActivity.KEY_MUSIC_RAW_ID, getMusic()));
+//            return false;
+//        }
+//    }
+//
+//    public static class WaitForFirstStirEvent extends BaseEvent {
+//
+//        public WaitForFirstStirEvent(String name, long duration) {
+//            super(name, duration);
+//        }
+//
+//        @Override
+//        protected int getMessage() {
+//            return R.string.on_time_stir;
+//        }
+//
+//        @Override
+//        protected int getMusic() {
+//            return R.raw.music_fisrt_stir;
+//        }
+//
+//        @Override
+//        protected int getDescriptionName() {
+//            return R.string.event_first_stir;
+//        }
+//    }
+//
+//    public static class WaitForSecondStirEvent extends BaseEvent {
+//
+//        public WaitForSecondStirEvent(String name, long duration) {
+//            super(name, duration);
+//        }
+//
+//        @Override
+//        protected int getMessage() {
+//            return R.string.on_time_stir;
+//        }
+//
+//        @Override
+//        protected int getMusic() {
+//            return R.raw.music_second_stir;
+//        }
+//
+//        @Override
+//        protected int getDescriptionName() {
+//            return R.string.event_second_stir;
+//        }
+//    }
+//
+//    public static class WaitForFirstDecoctionFinishEvent extends BaseEvent {
+//
+//        public WaitForFirstDecoctionFinishEvent(String name, long duration) {
+//            super(name, duration);
+//        }
+//
+//        @Override
+//        protected int getMessage() {
+//            return R.string.on_time_decoction_finish;
+//        }
+//
+//        @Override
+//        protected int getMusic() {
+//            return R.raw.music_decoction;
+//        }
+//
+//        @Override
+//        protected int getDescriptionName() {
+//            return R.string.task_first_decoction;
+//        }
+//    }
+//
+//    public static class WaitForSecondDecoctionFinishEvent extends BaseEvent {
+//
+//        public WaitForSecondDecoctionFinishEvent(String name, long duration) {
+//            super(name, duration);
+//        }
+//
+//        @Override
+//        protected int getMessage() {
+//            return R.string.on_time_decoction_finish;
+//        }
+//
+//        @Override
+//        protected int getMusic() {
+//            return R.raw.music_decoction;
+//        }
+//
+//        @Override
+//        protected int getDescriptionName() {
+//            return R.string.task_second_decoction;
+//        }
+//
+//        @Override
+//        protected boolean onExecute(Context context, Intent intent) {
+//            super.onExecute(context, intent);
+//            ContinuousTask.release(context, context.getString(R.string.task_first_decoction));
+//            return true;
+//        }
+//    }
 }

@@ -2,6 +2,7 @@
     <string name="app_name">煎药达人</string>
     <string name="task_first_decoction">第一开中药</string>
     <string name="task_second_decoction">第二开中药</string>
+    <string name="event_stir">中场拌药</string>
     <string name="event_first_stir">第一次拌药</string>
     <string name="event_second_stir">第二次拌药</string>
     <string name="event_decoction_finish">煎药结束</string>
@@ -17,8 +18,10 @@
 
     <integer name="first_medicine_duration_waiting_for_first_stir">10</integer>
     <integer name="first_medicine_duration_waiting_for_second_stir">10</integer>
-    <integer name="first_medicine_duration_waiting_for_finish">10</integer>
+    <integer name="first_medicine_duration_waiting_for_stir">15</integer>
+    <integer name="first_medicine_duration_waiting_for_finish">15</integer>
     <integer name="second_medicine_duration_waiting_for_first_stir">10</integer>
     <integer name="second_medicine_duration_waiting_for_second_stir">9</integer>
-    <integer name="second_medicine_duration_waiting_for_finish">9</integer>
+    <integer name="second_medicine_duration_waiting_for_stir">14</integer>
+    <integer name="second_medicine_duration_waiting_for_finish">14</integer>
 </resources>
